@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="450" viewBox="0 0 400 450" xmlns="http://www.w3.org/2000/svg">
+  <!-- Escudo con borde blanco -->
+  <path d="M200,20 L360,80 L360,240 C360,340 200,420 200,420 C200,420 40,340 40,240 L40,80 L200,20" 
+        fill="#283593" stroke="white" stroke-width="10"/>
+  
+  <!-- Línea superior del escudo -->
+  <path d="M70,95 L330,95" stroke="white" stroke-width="4" fill="none"/>
+  
+  <!-- Lupa -->
+  <circle cx="200" cy="180" r="90" stroke="white" stroke-width="14" fill="none"/>
+  <path d="M260,240 L320,300" stroke="white" stroke-width="14" fill="none" stroke-linecap="round"/>
+  
+  <!-- Marca de verificación amarilla -->
+  <path d="M160,180 L190,220 L240,140" stroke="#FFD600" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

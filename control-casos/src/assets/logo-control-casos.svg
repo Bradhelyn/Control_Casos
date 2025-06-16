@@ -1,0 +1,30 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Engranaje azul -->
+  <g transform="translate(110, 85) scale(0.9)">
+    <path d="M50,10 L54,22 L67,18 L72,30 L60,37 L65,50 L78,50 L78,63 L65,63 L60,76 L72,83 L67,95 L54,91 L50,103 L37,97 L37,110 L22,110 L22,97 L10,103 L5,91 L18,83 L13,76 L0,63 L0,50 L13,50 L18,37 L5,30 L10,18 L22,22 L27,10 L37,15 L50,10" 
+          fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
+    <circle cx="40" cy="56" r="25" fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
+    <!-- Marca de verificación dentro del engranaje -->
+    <path d="M28,56 L36,65 L52,45" stroke="white" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Trabajador con casco -->
+  <g transform="translate(30, 70) scale(0.8)">
+    <!-- Casco -->
+    <path d="M45,40 C30,40 30,25 45,20 C60,25 60,40 45,40 Z" fill="#2563eb"/>
+    <path d="M30,40 C30,30 40,15 60,15 C80,15 90,30 90,40 Z" fill="#2563eb"/>
+    
+    <!-- Cara -->
+    <circle cx="45" cy="55" r="15" fill="#d6e2ff"/>
+    
+    <!-- Cuerpo -->
+    <path d="M30,70 L60,70 L65,120 L25,120 Z" fill="#2563eb"/>
+    
+    <!-- Brazo sosteniendo carpeta -->
+    <path d="M65,85 L85,90 L85,110 L65,105 Z" fill="#2563eb"/>
+    
+    <!-- Carpeta -->
+    <rect x="70" y="90" width="30" height="25" fill="#93c5fd" rx="3"/>
+    <path d="M75,95 L95,95 M75,100 L95,100 M75,105 L95,105" stroke="#1d4ed8" stroke-width="2"/>
+  </g>
+</svg>

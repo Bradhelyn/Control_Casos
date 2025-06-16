@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Círculo exterior -->
+  <circle cx="200" cy="200" r="180" fill="white" stroke="black" stroke-width="3"/>
+  
+  <!-- Puntos decorativos a los lados -->
+  <circle cx="60" cy="200" r="5" fill="black"/>
+  <circle cx="340" cy="200" r="5" fill="black"/>
+  
+  <!-- Texto "FORENSE" en la parte superior -->
+  <text x="200" y="85" font-family="Arial Black, Arial, sans-serif" font-size="42" font-weight="900" text-anchor="middle">FORENSE</text>
+  
+  <!-- Texto "Control de casos" en la parte inferior -->
+  <path id="curvedPath" d="M90,260 A110,110 0 0,0 310,260" fill="none"/>
+  <text font-family="Arial, sans-serif" font-size="22" text-anchor="middle">
+    <textPath href="#curvedPath" startOffset="50%">Control de casos</textPath>
+  </text>
+  
+  <!-- Engranaje -->
+  <path d="M225,130 L230,145 L245,142 L248,157 L235,165 L240,180 L255,180 L255,195 L240,195 L235,210 L248,218 L245,233 L230,230 L225,245 L210,240 L210,255 L195,255 L195,240 L180,245 L175,230 L160,233 L158,218 L170,210 L165,195 L150,195 L150,180 L165,180 L170,165 L158,157 L160,142 L175,145 L180,130 L195,135 L210,135 L225,130" 
+        fill="black"/>
+  
+  <!-- Tablero/dispositivo dentro del engranaje -->
+  <rect x="170" y="155" width="60" height="70" rx="5" ry="5" fill="white" stroke="black" stroke-width="3"/>
+  
+  <!-- Detalle superior del tablero (barras de conexión) -->
+  <rect x="185" y="155" width="30" height="8" rx="2" ry="2" fill="black" stroke="none"/>
+  
+  <!-- Líneas/controles dentro del tablero -->
+  <circle cx="180" cy="175" r="3" fill="black"/>
+  <line x1="190" y1="175" x2="215" y2="175" stroke="black" stroke-width="2"/>
+  
+  <circle cx="220" cy="175" r="3" fill="black"/>
+  <circle cx="180" cy="190" r="3" fill="black"/>
+  
+  <line x1="190" y1="190" x2="205" y2="190" stroke="black" stroke-width="2"/>
+  <circle cx="210" cy="190" r="3" fill="black"/>
+  
+  <circle cx="180" cy="205" r="3" fill="black"/>
+  <line x1="190" y1="205" x2="220" y2="205" stroke="black" stroke-width="2"/>
+</svg>

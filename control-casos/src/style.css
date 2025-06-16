@@ -1,0 +1,171 @@
+/* Variables para tema claro (default) */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  /* Variables de tema claro */
+  --background-color: #ffffff;
+  --text-color: #213547;
+  --header-bg-color: #0b4d9b; /* Azul para encabezado */
+  --header-text-color: #ffffff;
+  --button-bg-color: #f9f9f9;
+  --button-hover-color: #e9e9e9;
+  --card-bg-color: #ffffff;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --border-color: #e0e0e0;
+  --link-color: #646cff;
+  --link-hover-color: #535bf2;
+  
+  /* Configuración general */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+/* Variables para tema oscuro */
+[data-theme="dark"] {
+  --background-color: #1a1a1a;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --header-bg-color: #053470; /* Azul oscuro para encabezado */
+  --header-text-color: #ffffff;
+  --button-bg-color: #2a2a2a;
+  --button-hover-color: #3a3a3a;
+  --card-bg-color: #242424;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --border-color: #444444;
+  --link-color: #818cf8;
+  --link-hover-color: #939bf4;
+}
+
+a {
+  font-weight: 500;
+  color: var(--link-color);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--link-hover-color);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--button-bg-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+button:hover {
+  border-color: var(--link-color);
+  background-color: var(--button-hover-color);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Estilos para el selector de tema */
+.theme-toggle {
+  background-color: #e9ecef;
+  border-radius: 2rem;
+  padding: 0.25rem;
+  display: inline-flex;
+  border: 1px solid #d1d9e6;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.theme-toggle-button {
+  padding: 0.375rem 1rem;
+  border-radius: 1.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background-color: transparent;
+  color: #495057;
+  position: relative;
+  z-index: 1;
+}
+
+.theme-toggle-button.active {
+  background-color: white;
+  color: #0b4d9b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark .theme-toggle {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+.dark .theme-toggle-button.active {
+  background-color: #3a3a3a;
+  color: #8ab4f8;
+}
+
+/* Transición para cambio de tema */
+html, body, #app {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Aplicar tema al cuerpo completo de la aplicación */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Asegurar que los containers principales heredan el tema */
+#app, .app-container {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+}
+
+/* Asegurar que el header se adapta al tema */
+.header {
+  background-color: var(--header-bg-color);
+  color: var(--header-text-color);
+}

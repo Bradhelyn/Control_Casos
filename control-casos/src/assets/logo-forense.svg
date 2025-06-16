@@ -1,0 +1,29 @@
+<svg width="512" height="512" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Escudo (Shield) como fondo principal -->
+  <defs>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A237E" />
+      <stop offset="100%" stop-color="#303F9F" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Escudo con forma impactante -->
+  <path d="M64,8 L16,32 L16,60 C16,89.5 36.9,117.2 64,120 C91.1,117.2 112,89.5 112,60 L112,32 L64,8 Z" 
+        fill="url(#shieldGradient)" stroke="#7986CB" stroke-width="1.5" />
+  
+  <!-- Lupa prominente con borde blanco -->
+  <circle cx="50" cy="54" r="26" stroke="white" stroke-width="5" fill="none" />
+  <line x1="68" y1="72" x2="88" y2="92" stroke="white" stroke-width="6" stroke-linecap="round" />
+  
+  <!-- Marca de verificación (check) -->
+  <path d="M42,56 l8,8 l18,-18" stroke="#FFEB3B" stroke-width="4" fill="none" 
+        stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Letra "F" estilizada para Forense -->
+  <text x="36" y="96" fill="white" font-family="Arial, sans-serif" 
+        font-size="22" font-weight="bold">CF</text>
+  
+  <!-- Borde brillante superior -->
+  <path d="M64,12 L24,32 L24,33 L64,13 L104,33 L104,32 L64,12 Z" 
+        fill="white" opacity="0.5" />
+</svg>
