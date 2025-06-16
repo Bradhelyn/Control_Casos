@@ -1,23 +1,22 @@
 <template>
   <aside class="sidebar">
     <div class="sidebar-header">
-      <img src="@/assets/forense.png" alt="Logo" class="logo" />
       <div class="sidebar-icons">
-        <span class="material-icons user-icon">account_circle</span>
-        <span class="material-icons logout-icon" @click="logout">logout</span>
+       
       </div>
     </div>
     <nav class="sidebar-nav">
       <div class="sidebar-section">
         <div class="sidebar-title">DASHBOARDS</div>
         <ul>
-          <li :class="{active: activeDashboard === 'ecommerce'}" @click="activeDashboard = 'ecommerce'">
+         
+          <li :class="{active: activeDashboard === 'sales'}" @click="navigateTo('sales')">
             <span class="material-icons">home</span>
-            E-Commerce
+            Home
           </li>
-          <li :class="{active: activeDashboard === 'banking'}" @click="activeDashboard = 'banking'">
-            <span class="material-icons">image</span>
-            Banking
+          <li :class="{active: activeDashboard === 'casos'}" @click="navigateTo('casos')">
+            <span class="material-icons">bolt</span>
+             Casos
           </li>
         </ul>
       </div>
@@ -102,7 +101,7 @@ export default {
         blog: false,
         mail: false,
       },
-      activeDashboard: 'ecommerce',
+      activeDashboard: 'casos',
     };
   },
   methods: {
@@ -112,6 +111,11 @@ export default {
     logout() {
       // Acción de cierre de sesión
       alert('Sesión cerrada');
+    },
+    navigateTo(dashboard) {
+      this.activeDashboard = dashboard;
+      // Emite evento para que el componente padre sepa qué vista mostrar
+      this.$emit('dashboard-changed', dashboard);
     },
   },
 };

@@ -1,20 +1,59 @@
 <template>
-  <NavHeader />
-  <main class="main-content">
-    <!-- Contenido principal de la aplicación -->
-
-  
-  </main>
+  <div class="layout-container">
+    <NavHeader />
+    <div class="app-container">
+      <Sidebar @dashboard-changed="changeDashboard" />
+      <main class="main-content">
+        <!-- Contenido principal de la aplicación -->
+        <component :is="currentDashboard" v-if="currentDashboard"></component>
+      </main>
+    </div>
+  </div>
 </template>
 
-<script setup>
+<script>
 import NavHeader from './components/NavHeader.vue';
+import Sidebar from './components/Sidebar.vue';
+import CasosDashboard from './components/CasosDashboard.vue';
+
+export default {
+  name: 'App',
+  components: {
+    NavHeader,
+    Sidebar,
+    CasosDashboard
+  },
+  data() {
+    return {
+      currentDashboard: 'CasosDashboard'
+    };
+  },
+  methods: {
+    changeDashboard(dashboard) {
+      // Convertir el nombre del dashboard a formato de componente (primera letra mayúscula + Dashboard)
+      const componentName = dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + 'Dashboard';
+      this.currentDashboard = componentName;
+    }
+  }
+};
 </script>
 
 <style>
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 100px); /* Restando la altura del NavHeader */
+}
+
 .main-content {
+  flex: 1;
   padding: 20px;
-  min-height: calc(100vh - 80px);
   background-color: var(--bg-primary); /* Usar variables del tema */
   color: var(--text-primary); /* Usar variables del tema */
   transition: background-color 0.3s, color 0.3s; /* Transición suave */
