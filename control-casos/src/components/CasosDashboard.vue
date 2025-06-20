@@ -1,8 +1,9 @@
 <template>
   <div class="casos-dashboard" :class="{ 'collapsed': dashboardCollapsed }">
+    <NuevoCasoModal :show="showNuevoCasoModal" @close="showNuevoCasoModal = false" @submit="agregarNuevoCaso" />
     <div class="dashboard-header">
       <div class="title-container">
-        <img src="@/assets/logo-control-casos.svg" alt="Logo Control de Casos" class="dashboard-logo"/>
+        <img src="@/assets/Forense.png" alt="Logo Control de Casos" class="dashboard-logo"/>
         <h1>Control de Casos</h1>
       </div>
       <button class="toggle-dashboard-btn" @click="toggleDashboard" :title="dashboardCollapsed ? 'Expandir Dashboard' : 'Colapsar Dashboard'">
@@ -52,7 +53,7 @@
             <option value="pending">Pendientes</option>
           </select>
           
-          <button class="nuevo-caso-button">
+          <button class="nuevo-caso-button" @click="showNuevoCasoModal = true">
             <div class="button-content">
               <div class="icon-circle">
                 <span class="material-icons">add</span>
@@ -123,11 +124,17 @@
 </template>
 
 <script>
+import NuevoCasoModal from './NuevoCasoModal.vue';
+
 export default {
   name: 'CasosDashboard',
+  components: {
+    NuevoCasoModal
+  },
   data() {
     return {
       dashboardCollapsed: false,
+      showNuevoCasoModal: false,
       searchQuery: '',
       statusFilter: 'all',
       currentPage: 1,
@@ -203,6 +210,14 @@ export default {
   methods: {
     toggleDashboard() {
       this.dashboardCollapsed = !this.dashboardCollapsed;
+    },
+    agregarNuevoCaso(nuevoCaso) {
+      // Aquí se procesaría la lógica para agregar el caso a la lista
+      console.log('Nuevo caso agregado:', nuevoCaso);
+      // Como ejemplo, podríamos agregar el caso directamente a la lista
+      nuevoCaso.id = 'C-' + new Date().getFullYear() + '-' + (this.casos.length + 1).toString().padStart(3, '0');
+      nuevoCaso.fechaApertura = new Date().toISOString().split('T')[0];
+      this.casos.unshift(nuevoCaso);
     },
     formatDate(date) {
       return new Date(date).toLocaleDateString('es-ES');
@@ -448,7 +463,7 @@ h1 {
 .cases-table-container {
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 24px;
   flex: 1;
   display: flex;
@@ -520,9 +535,10 @@ h1 {
   margin-bottom: 20px;
   table-layout: fixed;
   min-width: 1400px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #3f51b5;
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .cases-table th {
@@ -531,7 +547,7 @@ h1 {
   background-color: #f1f5ff;
   font-weight: 600;
   color: #3f51b5;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 1px solid #3f51b5;
   border-right: 1px solid #e2e8f0;
   white-space: nowrap;
   position: relative;
@@ -552,6 +568,14 @@ h1 {
   border-right: none;
 }
 
+.cases-table tr:first-child th {
+  border-top: none;
+}
+
+.cases-table tr:last-child td {
+  border-bottom: 1px solid #3f51b5;
+}
+
 .cases-table td {
   padding: 12px 16px;
   border-bottom: 1px solid #e2e8f0;
@@ -566,6 +590,14 @@ h1 {
 .cases-table td:last-child {
   border-right: none;
   padding: 0;
+}
+
+.cases-table td:first-child {
+  border-left: none;
+}
+
+.cases-table td:last-child {
+  border-right: none;
 }
 
 .cases-table tr:hover {
