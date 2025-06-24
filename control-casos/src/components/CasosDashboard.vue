@@ -53,7 +53,7 @@
             <option value="pending">Pendientes</option>
           </select>
           
-          <button class="nuevo-caso-button" @click="showNuevoCasoModal = true">
+          <button class="nuevo-caso-button" @click="abrirNuevoCasoModal()">
             <div class="button-content">
               <div class="icon-circle">
                 <span class="material-icons">add</span>
@@ -121,6 +121,13 @@
       </div>
     </div>
   </div>
+  
+  <!-- Modal para crear nuevo caso -->
+  <NuevoCasoModal 
+    :show="showNuevoCasoModal" 
+    @close="showNuevoCasoModal = false" 
+    @submit="handleNuevoCaso"
+  />
 </template>
 
 <script>
@@ -208,6 +215,27 @@ export default {
     }
   },
   methods: {
+    abrirNuevoCasoModal() {
+      console.log('Abriendo modal de nuevo caso');
+      this.showNuevoCasoModal = true;
+      console.log('Estado showNuevoCasoModal:', this.showNuevoCasoModal);
+    },
+    
+    handleNuevoCaso(nuevoCaso) {
+      console.log('Nuevo caso recibido:', nuevoCaso);
+      // Añadir el nuevo caso al principio de la lista
+      this.casos.unshift({
+        id: nuevoCaso.id,
+        titulo: nuevoCaso.titulo,
+        fechaApertura: new Date(),
+        responsable: nuevoCaso.receptorDestinatario || 'Por asignar',
+        estado: nuevoCaso.estadoCaso || 'Activo'
+      });
+      
+      // Mostrar confirmación (podrías implementar un sistema de notificaciones aquí)
+      alert('Caso creado correctamente');
+    },
+    
     toggleDashboard() {
       this.dashboardCollapsed = !this.dashboardCollapsed;
     },

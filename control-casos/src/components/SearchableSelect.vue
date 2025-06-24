@@ -5,10 +5,11 @@
         <span v-if="selectedOption">{{ selectedOption.label }}</span>
         <span v-else class="placeholder"></span>
       </div>
+
       <label>{{ label }}</label>
       <div class="select-arrow"></div>
     </div>
-    
+       
     <div v-show="isOpen" class="dropdown-container">
       <div class="search-container">
         <input 

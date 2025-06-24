@@ -7,9 +7,170 @@
           <span class="material-icons">close</span>
         </button>
       </div>
+
+      <div class="tab-menu">
+        <div class="tab-items">
+
+          <div 
+            class="tab-item" 
+            :class="{ 'active': activeTab === 'header2' }" 
+            @click="activeTab = 'header2'"
+          >
+          Información Básica
+          </div>
+
+          <div 
+            class="tab-item" 
+            :class="{ 'active': activeTab === 'header1' }" 
+            @click="activeTab = 'header1'"
+          >
+            Recomendaciones
+          </div>
+         
+          <div 
+            class="tab-item" 
+            :class="{ 'active': activeTab === 'header3' }" 
+            @click="activeTab = 'header3'"
+          >
+          Bitákora
+          </div>
+
+          <div 
+            class="tab-item" 
+            :class="{ 'active': activeTab === 'header4' }" 
+            @click="activeTab = 'header4'"
+          >
+          Asignaciones
+          </div>
+        </div>
+      </div>
+
+      
       
       <div class="modal-content">
-        <div class="form-section">
+        <!-- Tab content for Recomendaciones -->
+        <div v-if="activeTab === 'header1'" class="tab-content">
+          <div class="recommendations-table-container">
+            <div class="recommendations-wrapper">
+              <div class="recommendations-header">
+                <h3>Recomendaciones</h3>
+                <button class="add-button" @click="addRecomendacion">
+                  <span class="material-icons">add</span>
+                </button>
+              </div>
+              <table class="recommendations-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Fecha de Registro</th>
+                  <th>Usuario Registró</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(recomendacion, index) in recomendaciones" :key="index">
+                  <td>{{ recomendacion.titulo }}</td>
+                  <td>{{ formatDate(recomendacion.fechaRegistro) }}</td>
+                  <td>{{ recomendacion.usuarioRegistro }}</td>
+                  <td>{{ recomendacion.estado }}</td>
+                  <td class="action-buttons">
+                    <button class="action-button edit" @click="editarRecomendacion(index)">
+                      <span class="material-icons">edit</span>
+                    </button>
+                    <button class="action-button delete" @click="borrarRecomendacion(index)">
+                      <span class="material-icons">delete</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr v-if="recomendaciones.length === 0">
+                  <td colspan="5" class="no-data">No hay recomendaciones registradas</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab content for Bitácora -->
+        <div v-if="activeTab === 'header3'" class="tab-content bitacora-only">
+          <div class="bitacora-table-container">
+            <div class="bitacora-wrapper">
+              <div class="bitacora-header">
+                <h3>Bitácora</h3>
+                <button class="add-button" @click="addBitacora">
+                  <span class="material-icons">add</span>
+                </button>
+              </div>
+              <table class="bitacora-table">
+                <thead>
+                  <tr>
+                    <th>Descripción</th>
+                    <th>Fecha de Registro</th>
+                    <th>Usuario Registro</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(registro, index) in registrosBitacora" :key="index">
+                    <td>{{ registro.descripcion }}</td>
+                    <td>{{ formatDate(registro.fechaRegistro) }}</td>
+                    <td>{{ registro.usuarioRegistro }}</td>
+                    <td class="action-buttons">
+                      <button class="action-button edit" @click="editarBitacora(index)">
+                        <span class="material-icons">edit</span>
+                      </button>
+                      <button class="action-button delete" @click="borrarBitacora(index)">
+                        <span class="material-icons">delete</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr v-if="registrosBitacora.length === 0">
+                    <td colspan="4" class="no-data">No hay registros en la bitácora</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab content for Asignaciones -->
+        <div v-if="activeTab === 'header4'" class="tab-content asignaciones-only">
+          <div class="asignaciones-table-container">
+            <div class="asignaciones-wrapper">
+              <div class="asignaciones-header">
+                <h3>Asignaciones</h3>
+                <button class="add-button" @click="addAsignacion">
+                  <span class="material-icons">add</span>
+                </button>
+              </div>
+              <table class="asignaciones-table">
+                <thead>
+                  <tr>
+                    <th>Usuario Asignado</th>
+                    <th>Observaciones</th>
+                    <th>Fecha de Asignación</th>   
+                    <th>Usuario Registro</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(asignacion, index) in asignaciones" :key="index">
+                    <td>{{ asignacion.usuarioAsignado }}</td>
+                    <td>{{ asignacion.observaciones }}</td>
+                    <td>{{ formatDate(asignacion.fechaAsignacion) }}</td>
+                    <td>{{ asignacion.usuarioRegistro }}</td>
+                  </tr>
+                  <tr v-if="asignaciones.length === 0">
+                    <td colspan="4" class="no-data">No hay asignaciones registradas</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Original form content for other tabs -->
+        <div v-if="activeTab !== 'header1' && activeTab !== 'header3' && activeTab !== 'header4'" class="form-section">
           <h3>Información Básica</h3>
           
           <div class="form-grid">
@@ -168,16 +329,53 @@
         </div>
       </div>
     </div>
+    
+    <!-- Modal para agregar/editar recomendación -->
+    <NuevaRecomendacionModal 
+      :show="showNuevaRecomendacionModal" 
+      @close="showNuevaRecomendacionModal = false"
+      @submit="handleRecomendacionSubmit"
+      :recomendacionData="recomendacionEditing"
+    />
+  
+  <NuevaBitacoraModal
+    :show="showNuevaBitacoraModal"
+    :bitacoraData="bitacoraEnEdicion"
+    @close="showNuevaBitacoraModal = false"
+    @submit="addBitacoraEntry"
+  />
+  
+  <ConfirmDeleteModal
+    :show="showConfirmDeleteModal"
+    :message="confirmDeleteMessage"
+    @confirm="confirmDeleteBitacora"
+    @cancel="cancelDeleteBitacora"
+  />
   </div>
+  <!-- Modal para Nueva Asignación -->
+  <NuevaAsignacionModal
+    :show="showAsignacionModal"
+    :asignacionData="currentAsignacion"
+    @close="closeAsignacionModal"
+    @save-asignacion="saveAsignacion"
+  />
 </template>
 
 <script>
 import SearchableSelect from './SearchableSelect.vue';
+import NuevaRecomendacionModal from './NuevaRecomendacionModal.vue';
+import NuevaBitacoraModal from './NuevaBitacoraModal.vue';
+import ConfirmDeleteModal from './ConfirmDeleteModal.vue';
+import NuevaAsignacionModal from './NuevaAsignacionModal.vue';
 
 export default {
   name: 'NuevoCasoModal',
   components: {
-    SearchableSelect
+    NuevaRecomendacionModal,
+    NuevaBitacoraModal,
+    ConfirmDeleteModal,
+    SearchableSelect,
+    NuevaAsignacionModal
   },
   props: {
     show: {
@@ -187,6 +385,42 @@ export default {
   },
   data() {
     return {
+      showAsignacionModal: false,
+      currentAsignacion: null,
+      activeTab: 'header1',
+      recomendaciones: [],
+      asignaciones: [],
+      showNuevaRecomendacionModal: false,
+      recomendacionEditing: null,
+      showNuevaBitacoraModal: false,
+      showConfirmDeleteModal: false,
+      confirmDeleteMessage: '',
+      deleteItemIndex: -1,
+      deleteItemType: '',
+      recomendacionEnEdicion: null,
+      recomendacionEditIndex: -1,
+      bitacoraEnEdicion: null,
+      bitacoraEditIndex: -1,
+      registrosBitacora: [
+        {
+          id: 1,
+          descripcion: 'Se inició el análisis del caso forense',
+          fechaRegistro: '2025-05-15T10:30:00',
+          usuarioRegistro: 'Carlos Mendez'
+        },
+        {
+          id: 2,
+          descripcion: 'Revisión de evidencias digitales',
+          fechaRegistro: '2025-05-16T14:20:00',
+          usuarioRegistro: 'Ana Garcia'
+        },
+        {
+          id: 3,
+          descripcion: 'Entrevista con testigo principal',
+          fechaRegistro: '2025-05-17T09:45:00',
+          usuarioRegistro: 'Juan Rodriguez'
+        }
+      ],
       errors: [],
       showValidationMessage: false,
       formData: {
@@ -363,6 +597,132 @@ export default {
       this.resetForm();
       this.closeModal();
     },
+    formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('es-ES');
+    },
+    
+    addRecomendacion() {
+  // Mostrar el modal para agregar una nueva recomendación
+      this.recomendacionEditing = null;
+      this.showNuevaRecomendacionModal = true;
+    },
+
+    handleRecomendacionSubmit(recomendacion) {
+      if (this.recomendacionEditing) {
+        // Estamos editando una recomendación existente
+        this.recomendaciones[this.recomendacionEditing.index] = recomendacion;
+        this.recomendacionEditing = null;
+      } else {
+        // Estamos añadiendo una nueva recomendación
+        this.recomendaciones.push(recomendacion);
+      }
+    },
+    
+    editarRecomendacion(index) {
+      this.recomendacionEditing = { ...this.recomendaciones[index], index };
+      this.showNuevaRecomendacionModal = true;
+    },
+
+// Borrar una recomendación
+borrarRecomendacion(index) {
+  this.confirmDeleteMessage = `¿Está seguro(a) que desea eliminar esta recomendación?`;
+  this.deleteItemIndex = index;
+  this.deleteItemType = 'recomendacion';
+  this.showConfirmDeleteModal = true;
+},
+    
+    addBitacora() {
+      this.bitacoraEnEdicion = null;
+      this.bitacoraEditIndex = -1;
+      this.showNuevaBitacoraModal = true;
+    },
+    
+    editarBitacora(index) {
+      this.bitacoraEnEdicion = { ...this.registrosBitacora[index] };
+      this.bitacoraEditIndex = index;
+      this.showNuevaBitacoraModal = true;
+    },
+    
+    borrarBitacora(index) {
+      this.deleteItemIndex = index;
+      this.deleteItemType = 'bitacora';
+      this.confirmDeleteMessage = '¿Estás seguro de que deseas eliminar este registro de la bitácora?';
+      this.showConfirmDeleteModal = true;
+    },
+
+    // Funciones para manejar asignaciones
+    addAsignacion() {
+      this.currentAsignacion = null;
+      this.showAsignacionModal = true;
+    },
+    
+    closeAsignacionModal() {
+      this.showAsignacionModal = false;
+      this.currentAsignacion = null;
+    },
+    
+    saveAsignacion(asignacionData, isEditing) {
+      if (isEditing) {
+        // Editar una asignación existente
+        const index = this.asignaciones.findIndex(a => a.id === asignacionData.id);
+        if (index !== -1) {
+          this.asignaciones.splice(index, 1, asignacionData);
+        }
+      } else {
+        // Añadir nueva asignación
+        this.asignaciones.push(asignacionData);
+      }
+    },
+    
+    editarAsignacion(index) {
+      this.currentAsignacion = {...this.asignaciones[index]};
+      this.showAsignacionModal = true;
+    },
+    
+    borrarAsignacion(index) {
+      if (confirm('¿Está seguro de eliminar esta asignación?')) {
+        this.asignaciones.splice(index, 1);
+      }
+    },
+    
+    confirmDeleteBitacora() {
+      if (this.deleteItemType === 'bitacora' && this.deleteItemIndex !== -1) {
+        this.registrosBitacora.splice(this.deleteItemIndex, 1);
+      } else if (this.deleteItemType === 'recomendacion' && this.deleteItemIndex !== -1) {
+        this.recomendaciones.splice(this.deleteItemIndex, 1);
+      }
+      this.deleteItemIndex = -1;
+      this.deleteItemType = '';
+      this.showConfirmDeleteModal = false;
+    },
+    
+    cancelDeleteBitacora() {
+      this.deleteItemIndex = -1;
+      this.deleteItemType = '';
+      this.showConfirmDeleteModal = false;
+    },
+    
+    addBitacoraEntry(nuevaEntrada) {
+      if (this.bitacoraEditIndex !== -1) {
+        // Editar registro existente
+        this.registrosBitacora[this.bitacoraEditIndex] = {
+          ...this.registrosBitacora[this.bitacoraEditIndex],
+          ...nuevaEntrada
+        };
+        this.bitacoraEditIndex = -1;
+        this.bitacoraEnEdicion = null;
+      } else {
+        // Agregar nuevo registro
+        const id = this.registrosBitacora.length + 1;
+        this.registrosBitacora.push({
+          id,
+          ...nuevaEntrada
+        });
+      }
+    },
+    
     resetForm() {
       this.formData = {
         id: this.generateTempId(),
@@ -695,5 +1055,233 @@ export default {
   .form-group.full-width {
     grid-column: span 1;
   }
+}
+/* Estilos para el TabMenu */
+.tab-menu {
+  width: 100%;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 20px;
+}
+
+.tab-items {
+  display: flex;
+  position: relative;
+}
+
+.tab-item {
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  text-align: center;
+  margin-right: 24px;
+}
+
+.tab-item:hover {
+  color: #3f51b5;
+}
+
+.tab-item.active {
+  color: #3f51b5;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3f51b5;
+}
+
+.tab-items::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+/* Styles for tab content tables */
+.tab-content {
+  padding: 20px;
+}
+
+/* Clase especial para la pestaña de bitácora */
+.tab-content.bitacora-only,
+.tab-content.asignaciones-only {
+  height: 100%;
+  padding-bottom: 40px;
+}
+
+.tab-header {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.recommendations-wrapper,
+.bitacora-wrapper,
+.asignaciones-wrapper {
+  border: 2px solid #3f51b5;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
+
+.recommendations-header,
+.bitacora-header,
+.asignaciones-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #f9f9f9;
+  width: 100%;
+  border-bottom: 2px solid #3f51b5;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-button:hover {
+  background-color: #303f9f;
+}
+
+.add-button .material-icons {
+  font-size: 20px;
+}
+
+.recommendations-table-container,
+.bitacora-table-container,
+.asignaciones-table-container {
+  margin-top: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.recommendations-table,
+.bitacora-table,
+.asignaciones-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: none;
+  table-layout: fixed;
+  box-sizing: border-box;
+}
+
+.recommendations-table thead th,
+.bitacora-table thead th,
+.asignaciones-table thead th {
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #3f51b5;
+  position: relative;
+}
+
+.recommendations-table tbody td,
+.bitacora-table tbody td,
+.asignaciones-table tbody td {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #555;
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.recommendations-table th:not(:last-child)::after,
+.bitacora-table th:not(:last-child)::after,
+.asignaciones-table th:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background-color: #3f51b5;
+}
+
+.recommendations-table tbody td:last-child,
+.bitacora-table tbody td:last-child,
+.asignaciones-table tbody td:last-child {
+  border-right: none;
+}
+
+.recommendations-table tbody tr:last-child td,
+.bitacora-table tbody tr:last-child td,
+.asignaciones-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.recommendations-table tbody tr:hover,
+.bitacora-table tbody tr:hover,
+.asignaciones-table tbody tr:hover {
+  background-color: rgba(63, 81, 181, 0.05);
+}
+
+.no-data {
+  text-align: center;
+  color: #888;
+  padding: 10px 15px !important;
+}
+
+.action-buttons {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.action-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0 3px;
+}
+
+.action-button.edit {
+  color: #3f51b5;
+}
+
+.action-button.edit:hover {
+  background-color: rgba(63, 81, 181, 0.1);
+}
+
+.action-button.delete {
+  color: #f44336;
+}
+
+.action-button.delete:hover {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.action-button .material-icons {
+  font-size: 18px;
 }
 </style>
