@@ -1,92 +1,81 @@
 <template>
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-icons">
-       
-      </div>
+  <aside class="sidebar" :class="{collapsed: isCollapsed}">
+    <div class="sidebar-toggle">
+      <button @click="toggleSidebar" class="toggle-btn">
+        <span class="material-icons">{{ isCollapsed ? 'menu_open' : 'menu' }}</span>
+      </button>
     </div>
     <nav class="sidebar-nav">
       <div class="sidebar-section">
         <div class="sidebar-title">DASHBOARDS</div>
         <ul>
-         
-          <li :class="{active: activeDashboard === 'sales'}" @click="navigateTo('sales')">
+          <li :class="{active: activeDashboard === 'home'}" @click="navigateTo('home')">
             <span class="material-icons">home</span>
-            Home
+            <span class="menu-text">Home</span>
           </li>
           <li :class="{active: activeDashboard === 'casos'}" @click="navigateTo('casos')">
+            <span class="material-icons">schedule</span>
+            <span class="menu-text">Casos</span>
+          </li>
+          <li :class="{active: activeDashboard === 'tipos-casos'}" @click="navigateTo('tipos-casos')">
+            <span class="material-icons">category</span>
+            <span class="menu-text">Tipos de Casos</span>
+          </li>
+          <li @click="navigateTo('analytics')">
+            <span class="material-icons">insights</span>
+            <span class="menu-text">Analytics Dashboard</span>
+          </li>
+          <li @click="navigateTo('sales')">
+            <span class="material-icons">store</span>
+            <span class="menu-text">Sales Dashboard</span>
+          </li>
+          <li @click="navigateTo('saas')">
             <span class="material-icons">bolt</span>
-             Casos
+            <span class="menu-text">SaaS Dashboard</span>
           </li>
         </ul>
       </div>
+      
       <div class="sidebar-section">
         <div class="sidebar-title">APPS</div>
         <ul>
-          <li>
-            <div class="sidebar-item" @click="toggleMenu('blog')">
-              <span class="material-icons">chat_bubble_outline</span>
-              Blog
-              <span class="material-icons arrow">{{ openMenus.blog ? 'expand_less' : 'expand_more' }}</span>
-            </div>
-            <ul v-if="openMenus.blog" class="submenu">
-              <li>Sub Blog 1</li>
-              <li>Sub Blog 2</li>
-            </ul>
-          </li>
-          <li>
-            <div class="sidebar-item" @click="toggleMenu('chat')">
-              <span class="material-icons">question_answer</span>
-              Chat
-            </div>
-          </li>
-          <li>
+          <li @click="toggleSubMenu('blog')">
             <div class="sidebar-item">
-              <span class="material-icons">folder_open</span>
-              Files
+              <span class="material-icons">chat_bubble_outline</span>
+              <span class="menu-text">Blog</span>
+              <span class="material-icons arrow" :class="{rotated: openMenus.blog}">keyboard_arrow_down</span>
             </div>
           </li>
-          <li>
-            <div class="sidebar-item" @click="toggleMenu('mail')">
-              <span class="material-icons">mail_outline</span>
-              Mail
-              <span class="material-icons arrow">{{ openMenus.mail ? 'expand_less' : 'expand_more' }}</span>
+          <li @click="toggleSubMenu('chat')">
+            <div class="sidebar-item">
+              <span class="material-icons">forum</span>
+              <span class="menu-text">Chat</span>
             </div>
-            <ul v-if="openMenus.mail" class="submenu">
-              <li>Inbox</li>
-              <li>Sent</li>
-            </ul>
           </li>
-          <li>
+          <li @click="toggleSubMenu('files')">
+            <div class="sidebar-item">
+              <span class="material-icons">folder</span>
+              <span class="menu-text">Files</span>
+            </div>
+          </li>
+          <li @click="toggleSubMenu('mail')">
+            <div class="sidebar-item">
+              <span class="material-icons">email</span>
+              <span class="menu-text">Mail</span>
+              <span class="material-icons arrow" :class="{rotated: openMenus.mail}">keyboard_arrow_down</span>
+            </div>
+          </li>
+          <li @click="toggleSubMenu('tasks')">
             <div class="sidebar-item">
               <span class="material-icons">check_box</span>
-              Task List
+              <span class="menu-text">Task List</span>
             </div>
           </li>
         </ul>
       </div>
+
       <div class="sidebar-section">
         <div class="sidebar-title">UI KIT</div>
-        <ul>
-          <li>
-            <div class="sidebar-item">
-              <span class="material-icons">image</span>
-              Form Layout
-            </div>
-          </li>
-          <li>
-            <div class="sidebar-item">
-              <span class="material-icons">check_box</span>
-              Input
-            </div>
-          </li>
-          <li>
-            <div class="sidebar-item">
-              <span class="material-icons">view_in_ar</span>
-              Button
-            </div>
-          </li>
-        </ul>
       </div>
     </nav>
   </aside>
@@ -99,12 +88,20 @@ export default {
     return {
       openMenus: {
         blog: false,
-        mail: false,
+        mail: false
       },
       activeDashboard: 'casos',
+      isCollapsed: false,
     };
   },
+
   methods: {
+    toggleSidebar() {
+      this.isCollapsed = !this.isCollapsed;
+    },
+    toggleSubMenu(menu) {
+      this.openMenus[menu] = !this.openMenus[menu];
+    },
     toggleMenu(menu) {
       this.openMenus[menu] = !this.openMenus[menu];
     },
@@ -126,49 +123,33 @@ export default {
 .sidebar {
   width: 260px;
   background: #fff;
-  border-right: 1.5px solid #f1f1f1;
+  border-right: 1px solid #e0e0e0;
   height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: 'Segoe UI', Arial, sans-serif;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  padding-left: 0;
+  overflow-y: auto;
+  transition: width 0.3s ease;
 }
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 24px 18px 16px 18px;
-  border-bottom: 1px solid #f1f1f1;
-}
-.logo {
-  height: 38px;
-}
-.sidebar-icons {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.user-icon, .logout-icon {
-  font-size: 28px;
-  color: #3a3a3a;
-  cursor: pointer;
-}
-.logout-icon {
-  color: #1e88e5;
+.sidebar.collapsed {
+  width: 60px;
 }
 .sidebar-nav {
   flex: 1;
-  padding: 18px 0 0 0;
+  padding: 15px 0 0 0;
   overflow-y: auto;
 }
 .sidebar-section {
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 }
 .sidebar-title {
   font-size: 13px;
-  font-weight: 700;
-  color: #1a1a1a;
+  font-weight: 600;
+  color: #72757a;
   margin: 0 0 10px 20px;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 .sidebar-section ul {
   list-style: none;
@@ -178,40 +159,126 @@ export default {
 .sidebar-section li {
   display: flex;
   align-items: center;
-  padding: 8px 20px;
-  color: #4a4a4a;
-  font-size: 16px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  color: #333;
+  font-size: 14px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.2s ease;
+  margin: 2px 0;
 }
-.sidebar-section li.active, .sidebar-section li:hover {
-  background: #e3f2fd;
-  color: #1e88e5;
+.sidebar-section li.active {
+  background: #f5f5f5;
+  color: #3f51b5;
+  position: relative;
+}
+.sidebar-section li.active:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background-color: #3f51b5;
+}
+.sidebar-section li:hover {
+  background: #f5f5f5;
+  color: #3f51b5;
 }
 .sidebar-item {
   display: flex;
   align-items: center;
   width: 100%;
-  gap: 12px;
+  gap: 10px;
 }
 .material-icons {
-  font-size: 22px;
-  margin-right: 10px;
+  font-size: 20px;
+  margin-right: 8px;
+  color: #666;
+}
+.sidebar-toggle {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 15px;
+}
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+.toggle-btn:hover {
+  background: #f0f0f0;
+}
+.toggle-btn .material-icons {
+  margin-right: 0;
+  color: #3f51b5;
 }
 .arrow {
   margin-left: auto;
-  font-size: 20px;
+  font-size: 18px;
+  transition: transform 0.3s ease;
+  color: #aaa;
+}
+.arrow.rotated {
+  transform: rotate(180deg);
 }
 .submenu {
-  padding-left: 34px;
+  padding-left: 15px;
   margin-top: 3px;
+  transition: all 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+}
+.submenu.open {
+  max-height: 500px;
 }
 .submenu li {
-  font-size: 15px;
-  color: #1e88e5;
+  font-size: 14px;
+  color: #555;
   background: none;
-  padding: 6px 0;
-  border-radius: 0;
+  padding: 8px 10px 8px 48px;
+  margin: 0;
+}
+.submenu li.active {
+  color: #3f51b5;
+  background: #f0f0f0;
+}
+.menu-text {
+  flex: 1;
+  text-align: left;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.3s ease;
+}
+
+.collapsed .menu-text,
+.collapsed .arrow {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.collapsed .sidebar-title {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.collapsed .sidebar-section li {
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.collapsed .material-icons {
+  margin-right: 0;
 }
 </style>

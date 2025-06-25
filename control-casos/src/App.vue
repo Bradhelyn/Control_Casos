@@ -15,13 +15,16 @@
 import NavHeader from './components/NavHeader.vue';
 import Sidebar from './components/Sidebar.vue';
 import CasosDashboard from './components/CasosDashboard.vue';
+import TiposCasosDashboard from './components/TiposCasosDashboard.vue';
+
 
 export default {
   name: 'App',
   components: {
     NavHeader,
     Sidebar,
-    CasosDashboard
+    CasosDashboard,
+    TiposCasosDashboard
   },
   data() {
     return {
@@ -31,8 +34,12 @@ export default {
   methods: {
     changeDashboard(dashboard) {
       // Convertir el nombre del dashboard a formato de componente (primera letra mayúscula + Dashboard)
-      const componentName = dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + 'Dashboard';
-      this.currentDashboard = componentName;
+      if (dashboard === 'tipos-casos') {
+        this.currentDashboard = 'TiposCasosDashboard';
+      } else {
+        const componentName = dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + 'Dashboard';
+        this.currentDashboard = componentName;
+      }
     }
   }
 };
@@ -43,6 +50,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 100vw !important;
 }
 
 .app-container {
@@ -67,6 +75,8 @@ h2 {
 p {
   color: var(--text-secondary);
 }
+
+
 /* Importar Google Material Icons */
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
