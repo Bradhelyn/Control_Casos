@@ -362,10 +362,10 @@
 </template>
 
 <script>
-import SearchableSelect from './SearchableSelect.vue';
+import SearchableSelect from '../common/SearchableSelect.vue';
 import NuevaRecomendacionModal from './NuevaRecomendacionModal.vue';
-import NuevaBitacoraModal from './NuevaBitacoraModal.vue';
-import ConfirmDeleteModal from './ConfirmDeleteModal.vue';
+import NuevaBitacoraModal from '../bitacora/NuevaBitacoraModal.vue';
+import ConfirmDeleteModal from '../common/ConfirmDeleteModal.vue';
 import NuevaAsignacionModal from './NuevaAsignacionModal.vue';
 
 export default {

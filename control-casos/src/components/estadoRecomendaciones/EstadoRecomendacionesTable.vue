@@ -15,22 +15,23 @@
         </div>
       </div>
     </div>
-    <!-- Modal para nuevo/editar tipo de caso -->
-    <NuevoTipoCasoModal 
-      :show="showNuevoTipoCasoModal" 
-      :tipos-casos="tiposCasos" 
-      :tipo-seleccionado="tipoSeleccionado"
+    <!-- Modal para nuevo/editar estado de recomendación -->
+    <NuevoEstadoRecomendacionModal 
+      :show="showNuevaRecomendacionModal" 
+      :estados-recomendaciones="estadosRecomendaciones" 
+      :estado-seleccionado="estadoSeleccionado"
       :modo-edicion="modoEdicion"
-      @close="showNuevoTipoCasoModal = false" 
+      @close="showNuevaRecomendacionModal = false" 
       @submit="agregarNuevoTipoCaso"
       @update="actualizarTipoCaso" 
     />
     
     <div class="table-container">
       <div class="filters">
+        
         <div class="search-field">
           <span class="material-icons">search</span>
-          <input type="text" placeholder="Buscar tipo de caso..." v-model="searchQuery" />
+          <input type="text" placeholder="Buscar estados de recomendaciones..." v-model="searchQuery" />
         </div>
         
         <div class="filter-options">
@@ -39,7 +40,7 @@
               <div class="icon-circle">
                 <span class="material-icons">add</span>
               </div>
-              <span class="button-text">Nuevo Tipo</span>
+              <span class="button-text">Nueva Recomendación</span>
             </div>
             <div class="button-shine"></div>
           </button>
@@ -55,7 +56,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="tipo in filteredTipos" :key="tipo.id">
+          <tr v-for="tipo in filteredEstados" :key="tipo.id">
             <td>{{ tipo.id }}</td>
             <td>{{ tipo.descripcion }}</td>
             <td>
@@ -90,19 +91,19 @@
 </template>
 
 <script>
-import NuevoTipoCasoModal from './NuevoTipoCasoModal.vue';
+import NuevoEstadoRecomendacionModal from './NuevoEstadoRecomendacionModal.vue';
 
 export default {
-  name: 'TiposCasosTable',
+  name: 'EstadoRecomendacionesTable',
   components: {
-    NuevoTipoCasoModal
+    NuevoEstadoRecomendacionModal
   },
   mounted() {
     // Añadir listener para cerrar el dropdown cuando se hace clic fuera
     document.addEventListener('click', this.handleOutsideClick);
     
     // Emitir el total de tipos inicialmente al montar el componente
-    this.$emit('update-total', this.tiposCasos.length);
+    this.$emit('update-total', this.estadosRecomendaciones.length);
   },
   unmounted() {
     document.removeEventListener('click', this.handleOutsideClick);
@@ -110,19 +111,18 @@ export default {
   data() {
     return {
       searchQuery: '',
+      showNuevaRecomendacionModal: false,
       currentPage: 1,
-      first: 0,
       itemsPerPage: 5, // Límite de 5 registros por página
-      showNuevoTipoCasoModal: false,
       dropdownOpen: false,
       modoEdicion: false,
-      tipoSeleccionado: null,
+      estadoSeleccionado: null,
       showConfirmationDialog: false,
       tipoAEliminar: null,
-      tiposCasos: [
-        { id: 1, descripcion: 'Robo' },
-        { id: 2, descripcion: 'Fraude' },
-        { id: 3, descripcion: 'Homicidio' },
+      estadosRecomendaciones: [
+        { id: 1, descripcion: 'Pendiente' },
+        { id: 2, descripcion: 'En Proceso' },
+        { id: 3, descripcion: 'Completada' },
         { id: 4, descripcion: 'Estafa' },
         { id: 5, descripcion: 'Secuestro' },
       ]
@@ -155,20 +155,20 @@ export default {
       
       return pages;
     },
-    totalTipos() {
-      return this.tiposCasos.length;
+    totalEstados() {
+      return this.estadosRecomendaciones.length;
     },
-    filteredTipos() {
+    filteredEstados() {
       if (!this.searchQuery) {
-        // Si no hay búsqueda, paginar todos los tipos
+        // Si no hay búsqueda, paginar todos los estados
         const start = (this.currentPage - 1) * this.itemsPerPage;
         const end = start + this.itemsPerPage;
-        return this.tiposCasos.slice(start, end);
+        return this.estadosRecomendaciones.slice(start, end);
       }
       
       // Filtrar por consulta de búsqueda (ignorando mayúsculas/minúsculas)
       const query = this.searchQuery.toLowerCase();
-      const filtered = this.tiposCasos.filter(tipo => 
+      const filtered = this.estadosRecomendaciones.filter(tipo => 
         tipo.descripcion.toLowerCase().includes(query) || 
         tipo.id.toString().includes(query)
       );
@@ -180,11 +180,11 @@ export default {
     },
     totalItems() {
       if (!this.searchQuery) {
-        return this.tiposCasos.length;
+        return this.estadosRecomendaciones.length;
       }
       
       const query = this.searchQuery.toLowerCase();
-      return this.tiposCasos.filter(tipo => 
+      return this.estadosRecomendaciones.filter(tipo => 
         tipo.descripcion.toLowerCase().includes(query) || 
         tipo.id.toString().includes(query)
       ).length;
@@ -198,7 +198,7 @@ export default {
       this.currentPage = 1;
       this.first = 0;
     },
-    tiposCasos: {
+    estadosRecomendaciones: {
       handler(newValue) {
         // Emitir evento al componente padre con el total actualizado
         this.$emit('update-total', newValue.length);
@@ -233,8 +233,8 @@ export default {
     openNuevoTipoCasoModal() {
       // Aseguramos que estamos en modo creación, no edición
       this.modoEdicion = false;
-      this.tipoSeleccionado = null;
-      this.showNuevoTipoCasoModal = true;
+      this.estadoSeleccionado = null;
+      this.showNuevaRecomendacionModal = true;
     },
   
     // Alias para mantener compatibilidad con posibles llamadas existentes
@@ -259,51 +259,51 @@ export default {
       }
     },
     
-    agregarNuevoTipoCaso(nuevoTipo) {
+    agregarNuevoTipoCaso(nuevoEstado) {
       // Validar que la descripción no esté vacía
-      if (!nuevoTipo || !nuevoTipo.descripcion || nuevoTipo.descripcion.trim() === '') {
-        console.warn('Se intentó agregar un tipo de caso sin descripción');
+      if (!nuevoEstado || !nuevoEstado.descripcion || nuevoEstado.descripcion.trim() === '') {
+        console.warn('Se intentó agregar un estado de recomendación sin descripción');
         return; // No agregar registros vacíos
       }
       
       // Asignar ID incremental
-      const nuevoId = this.tiposCasos.length > 0 ? Math.max(...this.tiposCasos.map(t => t.id)) + 1 : 1;
+      const nuevoId = this.estadosRecomendaciones.length > 0 ? Math.max(...this.estadosRecomendaciones.map(t => t.id)) + 1 : 1;
       
       // Crear objeto tipo
-      const tipoCaso = {
+      const estadoRecomendacion = {
         id: nuevoId,
-        descripcion: nuevoTipo.descripcion.trim()
+        descripcion: nuevoEstado.descripcion.trim()
       };
       
       // Agregar a la lista
-      this.tiposCasos.push(tipoCaso);
-      this.showNuevoTipoCasoModal = false;
+      this.estadosRecomendaciones.push(estadoRecomendacion);
+      this.showNuevaRecomendacionModal = false;
     },
     
-    editarTipoCaso(tipo) {
-      // Establecer el modo edición y guardar el tipo seleccionado
+    editarTipoCaso(estado) {
+      // Establecer el modo edición y guardar el estado seleccionado
       this.modoEdicion = true;
-      this.tipoSeleccionado = {...tipo}; // Clonar el objeto para evitar referencias
+      this.estadoSeleccionado = {...estado}; // Clonar el objeto para evitar referencias
       
       // Mostrar el modal
-      this.showNuevoTipoCasoModal = true;
+      this.showNuevaRecomendacionModal = true;
     },
     
-    actualizarTipoCaso(tipoActualizado) {
-      // Buscar el índice del tipo que estamos actualizando
-      const index = this.tiposCasos.findIndex(t => t.id === tipoActualizado.id);
+    actualizarTipoCaso(estadoActualizado) {
+      // Buscar el índice del estado que estamos actualizando
+      const index = this.estadosRecomendaciones.findIndex(t => t.id === estadoActualizado.id);
       
       if (index !== -1) {
-        // Actualizamos el tipo en el arreglo
-        this.tiposCasos[index] = {
-          ...this.tiposCasos[index],
-          descripcion: tipoActualizado.descripcion
+        // Actualizamos el estado en el arreglo
+        this.estadosRecomendaciones[index] = {
+          ...this.estadosRecomendaciones[index],
+          descripcion: estadoActualizado.descripcion
         };
       }
       
-      // Reiniciar el modo y el tipo seleccionado
+      // Reiniciar el modo y el estado seleccionado
       this.modoEdicion = false;
-      this.tipoSeleccionado = null;
+      this.estadoSeleccionado = null;
     },
     
     eliminarTipoCaso(id) {
@@ -324,7 +324,7 @@ export default {
       
       // Eliminar el tipo caso
       console.log(`Eliminar tipo caso con ID: ${this.tipoAEliminar}`);
-      this.tiposCasos = this.tiposCasos.filter(tipo => tipo.id !== this.tipoAEliminar);
+      this.estadosRecomendaciones = this.estadosRecomendaciones.filter(tipo => tipo.id !== this.tipoAEliminar);
       
       // Cerrar el diálogo y limpiar
       this.showConfirmationDialog = false;
@@ -401,10 +401,11 @@ export default {
   width: 100%;
   max-width: 800px; /* Limita la anchura para centralizar */
   margin: 0 auto;
-  border: 2px solid #3f51b5;
+  border: 2px solid #e2e8f0;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(63, 81, 181, 0.2);
+  margin-bottom: 20px;
+  background-color: white;
 }
 
 .filters {
@@ -632,19 +633,23 @@ export default {
 .tipos-table {
   width: 100%;
   border-collapse: collapse;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
   background-color: white;
-  margin-bottom: 0;
-  border: none;
 }
 
-.tipos-table th {
+.tipos-table thead {
   text-align: center;
   padding: 15px 10px;
   background-color: #e8eeff;
   font-weight: 600;
   color: #3f51b5;
-  border: 1px solid #d0d8ff;
-  white-space: nowrap;
+  border: 1px solid #c1d2fa;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 /* Estilos para las columnas específicas */
@@ -664,18 +669,18 @@ export default {
   padding: 15px 10px;
   border: 1px solid #e2e8f0;
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: 60px;
+  color: #1a237e;
   vertical-align: middle;
   font-size: 14px;
 }
+
+
 
 .tipos-table td:last-child {
   text-align: center;
 }
 
-.tipos-table tr:hover {
+.tipos-table tbody tr:hover {
   background-color: #f5f7ff;
 }
 

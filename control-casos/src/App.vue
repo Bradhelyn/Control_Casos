@@ -12,11 +12,12 @@
 </template>
 
 <script>
-import NavHeader from './components/NavHeader.vue';
-import Sidebar from './components/Sidebar.vue';
-import CasosDashboard from './components/CasosDashboard.vue';
-import TiposCasosDashboard from './components/TiposCasosDashboard.vue';
-import EstadosCasosDashboard from './components/EstadosCasosDashboard.vue';
+import NavHeader from './components/layout/NavHeader.vue';
+import Sidebar from './components/layout/Sidebar.vue';
+import CasosDashboard from './components/casos/CasosDashboard.vue';
+import TiposCasosDashboard from './components/tiposCasos/TiposCasosDashboard.vue';
+import EstadosCasosDashboard from './components/estadosCasos/EstadosCasosDashboard.vue';
+import EstadoRecomendacionesDashboard from './components/estadoRecomendaciones/EstadoRecomendacionesDashboard.vue';
 
 
 export default {
@@ -26,7 +27,8 @@ export default {
     Sidebar,
     CasosDashboard,
     TiposCasosDashboard,
-    EstadosCasosDashboard
+    EstadosCasosDashboard,
+    EstadoRecomendacionesDashboard
   },
   data() {
     return {
@@ -40,6 +42,8 @@ export default {
         this.currentDashboard = 'TiposCasosDashboard';
       } else if (dashboard === 'estados-casos') {
         this.currentDashboard = 'EstadosCasosDashboard';
+      } else if (dashboard === 'estados-recomendaciones') {
+        this.currentDashboard = 'EstadoRecomendacionesDashboard';
       } else {
         const componentName = dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + 'Dashboard';
         this.currentDashboard = componentName;

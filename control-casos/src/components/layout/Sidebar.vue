@@ -25,9 +25,9 @@
             <span class="material-icons">insights</span>
             <span class="menu-text">Estados de Casos</span>
           </li>
-          <li @click="navigateTo('sales')">
+          <li :class="{active: activeDashboard === 'estados-recomendaciones'}" @click="navigateTo('estados-recomendaciones')">
             <span class="material-icons">store</span>
-            <span class="menu-text">Sales Dashboard</span>
+            <span class="menu-text">Estados de Recomendaciones</span>
           </li>
           <li @click="navigateTo('saas')">
             <span class="material-icons">bolt</span>

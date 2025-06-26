@@ -1,5 +1,5 @@
 <template>
-  <div class="estados-casos-container">
+  <div class="tipos-casos-container">
     <!-- Modal de confirmación para eliminación -->
     <div class="confirmation-modal" v-if="showConfirmationDialog" @click.self="cancelarEliminacion">
       <div class="confirmation-content">
@@ -15,61 +15,59 @@
         </div>
       </div>
     </div>
-    <!-- Modal para nuevo/editar estado de caso -->
-    <NuevoEstadoCasoModal 
-      :show="showNuevoEstadoCasoModal" 
-      :estados-casos="estadosCasos" 
-      :estado-seleccionado="estadoSeleccionado"
+    <!-- Modal para nuevo/editar tipo de caso -->
+    <NuevoTipoCasoModal 
+      :show="showNuevoTipoCasoModal" 
+      :tipos-casos="tiposCasos" 
+      :tipo-seleccionado="tipoSeleccionado"
       :modo-edicion="modoEdicion"
-      @close="showNuevoEstadoCasoModal = false" 
-      @submit="agregarNuevoEstadoCaso"
-      @update="actualizarEstadoCaso" 
+      @close="showNuevoTipoCasoModal = false" 
+      @submit="agregarNuevoTipoCaso"
+      @update="actualizarTipoCaso" 
     />
     
     <div class="table-container">
       <div class="filters">
         <div class="search-field">
           <span class="material-icons">search</span>
-          <input type="text" placeholder="Buscar estado de caso..." v-model="searchQuery" />
+          <input type="text" placeholder="Buscar tipo de caso..." v-model="searchQuery" />
         </div>
         
         <div class="filter-options">
-          <button class="nuevo-estado-button" @click="openNuevoEstadoCasoModal()">
+          <button class="nuevo-tipo-button" @click="openNuevoTipoCasoModal()">
             <div class="button-content">
               <div class="icon-circle">
                 <span class="material-icons">add</span>
               </div>
-              <span class="button-text">Nuevo Estado</span>
+              <span class="button-text">Nuevo Tipo</span>
             </div>
             <div class="button-shine"></div>
           </button>
         </div>
       </div>
       
-      <table class="estados-table">
+      <table class="tipos-table">
         <thead>
           <tr>
             <th class="column-id">ID</th>
             <th class="column-descripcion">Descripción</th>
-            <th class="column-porciento">Porciento</th>
             <th class="column-acciones">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="estado in filteredEstados" :key="estado.id">
-            <td>{{ estado.id }}</td>
-            <td>{{ estado.descripcion }}</td>
-            <td>{{ estado.porciento ? estado.porciento + '%' : '0%' }}</td>
+          <tr v-for="tipo in filteredTipos" :key="tipo.id">
+            <td>{{ tipo.id }}</td>
+            <td>{{ tipo.descripcion }}</td>
             <td>
               <div class="action-icons">
                 <span
                   class="material-icons action-icon edit-icon"
-                  @click="editarEstadoCaso(estado)"
+                  @click="editarTipoCaso(tipo)"
                   >edit</span
                 >
                 <span
                   class="material-icons action-icon delete-icon"
-                  @click="eliminarEstadoCaso(estado.id)"
+                  @click="eliminarTipoCaso(tipo.id)"
                   >delete</span
                 >
               </div>
@@ -92,19 +90,19 @@
 </template>
 
 <script>
-import NuevoEstadoCasoModal from './NuevoEstadoCasoModal.vue';
+import NuevoTipoCasoModal from './NuevoTipoCasoModal.vue';
 
 export default {
-  name: 'EstadosCasosTable',
+  name: 'TiposCasosTable',
   components: {
-    NuevoEstadoCasoModal
+    NuevoTipoCasoModal
   },
   mounted() {
     // Añadir listener para cerrar el dropdown cuando se hace clic fuera
     document.addEventListener('click', this.handleOutsideClick);
     
-    // Emitir el total de estados inicialmente al montar el componente
-    this.$emit('update-total', this.estadosCasos.length);
+    // Emitir el total de tipos inicialmente al montar el componente
+    this.$emit('update-total', this.tiposCasos.length);
   },
   unmounted() {
     document.removeEventListener('click', this.handleOutsideClick);
@@ -115,18 +113,18 @@ export default {
       currentPage: 1,
       first: 0,
       itemsPerPage: 5, // Límite de 5 registros por página
-      showNuevoEstadoCasoModal: false,
+      showNuevoTipoCasoModal: false,
       dropdownOpen: false,
       modoEdicion: false,
-      estadoSeleccionado: null,
+      tipoSeleccionado: null,
       showConfirmationDialog: false,
-      idSeleccionadoParaEliminar: null,
-      estadosCasos: [
-        { id: 1, descripcion: 'Abierto', porciento: 10 },
-        { id: 2, descripcion: 'En Proceso', porciento: 45 },
-        { id: 3, descripcion: 'En Espera', porciento: 75 },
-        { id: 4, descripcion: 'Resuelto', porciento: 100 },
-        { id: 5, descripcion: 'Cerrado', porciento: 100 },
+      tipoAEliminar: null,
+      tiposCasos: [
+        { id: 1, descripcion: 'Robo' },
+        { id: 2, descripcion: 'Fraude' },
+        { id: 3, descripcion: 'Homicidio' },
+        { id: 4, descripcion: 'Estafa' },
+        { id: 5, descripcion: 'Secuestro' },
       ]
     };
   },
@@ -157,32 +155,38 @@ export default {
       
       return pages;
     },
-    totalEstados() {
-      return this.estadosCasos.length;
+    totalTipos() {
+      return this.tiposCasos.length;
     },
-    filteredEstados() {
+    filteredTipos() {
       if (!this.searchQuery) {
-        // Calcular el índice del primer elemento a mostrar
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-        // Retornar la porción de la lista correspondiente a la página actual
-        return this.estadosCasos.slice(startIndex, startIndex + this.itemsPerPage);
+        // Si no hay búsqueda, paginar todos los tipos
+        const start = (this.currentPage - 1) * this.itemsPerPage;
+        const end = start + this.itemsPerPage;
+        return this.tiposCasos.slice(start, end);
       }
       
-      // Filtrar estados por la consulta de búsqueda
-      const filtered = this.estadosCasos.filter(estado =>
-        estado.descripcion.toLowerCase().includes(this.searchQuery.toLowerCase())
+      // Filtrar por consulta de búsqueda (ignorando mayúsculas/minúsculas)
+      const query = this.searchQuery.toLowerCase();
+      const filtered = this.tiposCasos.filter(tipo => 
+        tipo.descripcion.toLowerCase().includes(query) || 
+        tipo.id.toString().includes(query)
       );
       
-      // Para búsquedas, mostrar solo los resultados de la página actual
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      return filtered.slice(startIndex, startIndex + this.itemsPerPage);
+      // Paginar los resultados filtrados
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return filtered.slice(start, end);
     },
     totalItems() {
       if (!this.searchQuery) {
-        return this.estadosCasos.length;
+        return this.tiposCasos.length;
       }
-      return this.estadosCasos.filter(estado =>
-        estado.descripcion.toLowerCase().includes(this.searchQuery.toLowerCase())
+      
+      const query = this.searchQuery.toLowerCase();
+      return this.tiposCasos.filter(tipo => 
+        tipo.descripcion.toLowerCase().includes(query) || 
+        tipo.id.toString().includes(query)
       ).length;
     },
     totalPages() {
@@ -194,10 +198,10 @@ export default {
       this.currentPage = 1;
       this.first = 0;
     },
-    estadosCasos: {
+    tiposCasos: {
       handler(newValue) {
         // Emitir evento al componente padre con el total actualizado
-        this.$emit('update', this.estadosCasos);
+        this.$emit('update-total', newValue.length);
       },
       deep: true,
       immediate: true
@@ -226,16 +230,16 @@ export default {
       this.currentPage = 1;
     },
 
-    openNuevoEstadoCasoModal() {
+    openNuevoTipoCasoModal() {
       // Aseguramos que estamos en modo creación, no edición
       this.modoEdicion = false;
-      this.estadoSeleccionado = null;
-      this.showNuevoEstadoCasoModal = true;
+      this.tipoSeleccionado = null;
+      this.showNuevoTipoCasoModal = true;
     },
   
     // Alias para mantener compatibilidad con posibles llamadas existentes
-    abrirNuevoEstadoCasoModal() {
-      this.openNuevoEstadoCasoModal();
+    abrirNuevoTipoCasoModal() {
+      this.openNuevoTipoCasoModal();
     },
     
     toggleDropdown() {
@@ -255,90 +259,76 @@ export default {
       }
     },
     
-    editarEstadoCaso(estado) {
-      // Establecer el modo edición y guardar el estado seleccionado
+    agregarNuevoTipoCaso(nuevoTipo) {
+      // Validar que la descripción no esté vacía
+      if (!nuevoTipo || !nuevoTipo.descripcion || nuevoTipo.descripcion.trim() === '') {
+        console.warn('Se intentó agregar un tipo de caso sin descripción');
+        return; // No agregar registros vacíos
+      }
+      
+      // Asignar ID incremental
+      const nuevoId = this.tiposCasos.length > 0 ? Math.max(...this.tiposCasos.map(t => t.id)) + 1 : 1;
+      
+      // Crear objeto tipo
+      const tipoCaso = {
+        id: nuevoId,
+        descripcion: nuevoTipo.descripcion.trim()
+      };
+      
+      // Agregar a la lista
+      this.tiposCasos.push(tipoCaso);
+      this.showNuevoTipoCasoModal = false;
+    },
+    
+    editarTipoCaso(tipo) {
+      // Establecer el modo edición y guardar el tipo seleccionado
       this.modoEdicion = true;
-      this.estadoSeleccionado = {...estado}; // Clonar el objeto para evitar referencias
+      this.tipoSeleccionado = {...tipo}; // Clonar el objeto para evitar referencias
       
       // Mostrar el modal
-      this.showNuevoEstadoCasoModal = true;
+      this.showNuevoTipoCasoModal = true;
     },
     
-    actualizarEstadoCaso(estadoActualizado) {
-      // Verificar que no exista otro estado con la misma descripción (excepto el mismo)
-      const descripcionExistente = this.estadosCasos.find(estado => 
-        estado.id !== estadoActualizado.id && 
-        estado.descripcion.toLowerCase() === estadoActualizado.descripcion.toLowerCase());
-        
-      if (descripcionExistente) {
-        alert('Ya existe otro estado de caso con esta descripción');
-        return;
-      }
-      
-      // Actualizar el estado en la lista
-      const index = this.estadosCasos.findIndex(estado => estado.id === estadoActualizado.id);
+    actualizarTipoCaso(tipoActualizado) {
+      // Buscar el índice del tipo que estamos actualizando
+      const index = this.tiposCasos.findIndex(t => t.id === tipoActualizado.id);
       
       if (index !== -1) {
-        // Crear una nueva array para mantener la reactividad
-        const nuevosEstadosCasos = [...this.estadosCasos];
-        nuevosEstadosCasos[index] = estadoActualizado;
-        this.estadosCasos = nuevosEstadosCasos;
-        this.$emit('update', this.estadosCasos);
-      }
-    },
-    
-    agregarNuevoEstadoCaso(nuevoEstado) {
-      // Primero, verificar que no existe ya un estado con esa descripción
-      const descripcionExistente = this.estadosCasos.find(estado => 
-        estado.descripcion.toLowerCase() === nuevoEstado.descripcion.toLowerCase());
-        
-      if (descripcionExistente) {
-        alert('Ya existe un estado de caso con esta descripción');
-        return;
+        // Actualizamos el tipo en el arreglo
+        this.tiposCasos[index] = {
+          ...this.tiposCasos[index],
+          descripcion: tipoActualizado.descripcion
+        };
       }
       
-      // Añadir el nuevo estado a la lista
-      const nuevosEstadosCasos = [...this.estadosCasos, nuevoEstado];
-      
-      // Ordenar por ID
-      nuevosEstadosCasos.sort((a, b) => a.id - b.id);
-      
-      // Actualizar el array y emitir el evento
-      this.estadosCasos = nuevosEstadosCasos;
-      this.$emit('update', this.estadosCasos);
-      
-      // Emitir el nuevo total
-      this.$emit('update-total', this.estadosCasos.length);
+      // Reiniciar el modo y el tipo seleccionado
+      this.modoEdicion = false;
+      this.tipoSeleccionado = null;
     },
     
-    eliminarEstadoCaso(id) {
-      // Guardar el ID para usarlo en confirmarEliminacion
-      this.idSeleccionadoParaEliminar = id;
+    eliminarTipoCaso(id) {
+      // Mostrar diálogo de confirmación y guardar el ID del tipo a eliminar
       this.showConfirmationDialog = true;
+      this.tipoAEliminar = id;
     },
     
     cancelarEliminacion() {
       // Cancelar la eliminación
       this.showConfirmationDialog = false;
-      this.idSeleccionadoParaEliminar = null;
+      this.tipoAEliminar = null;
     },
     
     confirmarEliminacion() {
-      // Eliminar el estado con el ID guardado
-      if (this.idSeleccionadoParaEliminar) {
-        // Filtrar la lista para excluir el estado que queremos eliminar
-        this.estadosCasos = this.estadosCasos.filter(e => e.id !== this.idSeleccionadoParaEliminar);
-        
-        // Actualizar la vista emitiendo el evento
-        this.$emit('update', this.estadosCasos);
-        
-        // Emitir el nuevo total
-        this.$emit('update-total', this.estadosCasos.length);
-      }
+      // Si no hay un tipo seleccionado para eliminar, no hacer nada
+      if (this.tipoAEliminar === null) return;
       
-      // Ocultar el diálogo y resetear el ID
+      // Eliminar el tipo caso
+      console.log(`Eliminar tipo caso con ID: ${this.tipoAEliminar}`);
+      this.tiposCasos = this.tiposCasos.filter(tipo => tipo.id !== this.tipoAEliminar);
+      
+      // Cerrar el diálogo y limpiar
       this.showConfirmationDialog = false;
-      this.idSeleccionadoParaEliminar = null;
+      this.tipoAEliminar = null;
     },
     
     prevPage() {
@@ -411,7 +401,7 @@ export default {
   width: 100%;
   max-width: 800px; /* Limita la anchura para centralizar */
   margin: 0 auto;
-  border: 2px solid #3f51b5;
+  border: 2px solid #e2e8f0;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(63, 81, 181, 0.2);
@@ -454,7 +444,7 @@ export default {
   gap: 15px;
 }
 
-.nuevo-estado-button {
+.nuevo-tipo-button {
   background: linear-gradient(135deg, #3F51B5 0%, #2979ff 100%);
   color: white;
   border: none;
@@ -639,7 +629,7 @@ export default {
 }
 
 /* Estilos para la tabla */
-.estados-table {
+.tipos-table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
@@ -647,7 +637,7 @@ export default {
   border: none;
 }
 
-.estados-table th {
+.tipos-table th {
   text-align: center;
   padding: 15px 10px;
   background-color: #e8eeff;
@@ -670,7 +660,7 @@ export default {
   width: 120px;
 }
 
-.estados-table td {
+.tipos-table td {
   padding: 15px 10px;
   border: 1px solid #e2e8f0;
   text-align: center;
@@ -681,11 +671,11 @@ export default {
   font-size: 14px;
 }
 
-.estados-table td:last-child {
+.tipos-table td:last-child {
   text-align: center;
 }
 
-.estados-table tr:hover {
+.tipos-table tr:hover {
   background-color: #f5f7ff;
 }
 

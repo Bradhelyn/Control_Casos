@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { useTheme } from '../composables/useTheme';
+import { useTheme } from '../../composables/useTheme';
 import { onMounted, ref } from 'vue';
 
 const { currentTheme, setTheme } = useTheme();
