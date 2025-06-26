@@ -21,9 +21,9 @@
             <span class="material-icons">category</span>
             <span class="menu-text">Tipos de Casos</span>
           </li>
-          <li @click="navigateTo('analytics')">
+          <li :class="{active: activeDashboard === 'estados-casos'}" @click="navigateTo('estados-casos')">
             <span class="material-icons">insights</span>
-            <span class="menu-text">Analytics Dashboard</span>
+            <span class="menu-text">Estados de Casos</span>
           </li>
           <li @click="navigateTo('sales')">
             <span class="material-icons">store</span>

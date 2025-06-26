@@ -16,6 +16,7 @@ import NavHeader from './components/NavHeader.vue';
 import Sidebar from './components/Sidebar.vue';
 import CasosDashboard from './components/CasosDashboard.vue';
 import TiposCasosDashboard from './components/TiposCasosDashboard.vue';
+import EstadosCasosDashboard from './components/EstadosCasosDashboard.vue';
 
 
 export default {
@@ -24,7 +25,8 @@ export default {
     NavHeader,
     Sidebar,
     CasosDashboard,
-    TiposCasosDashboard
+    TiposCasosDashboard,
+    EstadosCasosDashboard
   },
   data() {
     return {
@@ -36,6 +38,8 @@ export default {
       // Convertir el nombre del dashboard a formato de componente (primera letra mayúscula + Dashboard)
       if (dashboard === 'tipos-casos') {
         this.currentDashboard = 'TiposCasosDashboard';
+      } else if (dashboard === 'estados-casos') {
+        this.currentDashboard = 'EstadosCasosDashboard';
       } else {
         const componentName = dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + 'Dashboard';
         this.currentDashboard = componentName;
