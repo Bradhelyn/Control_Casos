@@ -26,7 +26,7 @@
             <span class="menu-text">Estados de Casos</span>
           </li>
           <li :class="{active: activeDashboard === 'estados-recomendaciones'}" @click="navigateTo('estados-recomendaciones')">
-            <span class="material-icons">store</span>
+            <span class="material-icons">assignment_turned_in</span>
             <span class="menu-text">Estados de Recomendaciones</span>
           </li>
           <li @click="navigateTo('saas')">
