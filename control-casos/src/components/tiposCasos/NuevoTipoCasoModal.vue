@@ -89,7 +89,9 @@ export default {
             descripcion: this.tipoSeleccionado.descripcion
           };
         } else {
-          // Si estamos creando uno nuevo, generamos un nuevo ID
+          // Si estamos creando uno nuevo, primero limpiamos completamente el formulario
+          this.resetForm();
+          // Luego generamos un nuevo ID
           this.generarNuevoId();
         }
       }

@@ -15,31 +15,31 @@
         </div>
       </div>
     </div>
-    <!-- Modal para nuevo/editar estado recomendación -->
-    <NuevoEstadoRecomendacionModal 
-      :show="showNuevoTipoCasoModal" 
-      :estados-recomendaciones="tiposCasos" 
-      :estado-seleccionado="tipoSeleccionado"
+    <!-- Modal para nuevo/editar tipo de recomendación -->
+    <NuevoTipoRecomendacionesModal 
+      :show="showNuevoTipoModal" 
+      :tipos-recomendaciones="tiposRecomendaciones" 
+      :tipo-seleccionado="tipoSeleccionado"
       :modo-edicion="modoEdicion"
-      @close="showNuevoTipoCasoModal = false" 
-      @submit="agregarNuevoTipoCaso"
-      @update="actualizarTipoCaso" 
+      @close="showNuevoTipoModal = false" 
+      @submit="agregarNuevoTipo"
+      @update="actualizarTipo" 
     />
     
     <div class="table-container">
       <div class="filters">
         <div class="search-field">
           <span class="material-icons">search</span>
-          <input type="text" placeholder="Buscar estado de recomendaciones..." v-model="searchQuery" />
+          <input type="text" placeholder="Buscar tipo de recomendación..." v-model="searchQuery" />
         </div>
         
         <div class="filter-options">
-          <button class="nuevo-tipo-button" @click="openNuevoTipoCasoModal()">
+          <button class="nuevo-tipo-button" @click="openNuevoTipoModal()">
             <div class="button-content">
               <div class="icon-circle">
                 <span class="material-icons">add</span>
               </div>
-              <span class="button-text">Nueva recomendación</span>
+              <span class="button-text">Nuevo Tipo de Recomendación</span>
             </div>
             <div class="button-shine"></div>
           </button>
@@ -62,12 +62,12 @@
               <div class="action-icons">
                 <span
                   class="material-icons action-icon edit-icon"
-                  @click="editarTipoCaso(tipo)"
+                  @click="editarTipo(tipo)"
                   >edit</span
                 >
                 <span
                   class="material-icons action-icon delete-icon"
-                  @click="eliminarTipoCaso(tipo.id)"
+                  @click="eliminarTipo(tipo.id)"
                   >delete</span
                 >
               </div>
@@ -90,19 +90,19 @@
 </template>
 
 <script>
-import NuevoEstadoRecomendacionModal from './NuevoEstadoRecomendacionModal.vue';
+import NuevoTipoRecomendacionesModal from './NuevoTipoRecomendacionesModal.vue';
 
 export default {
-  name: 'EstadoRecomendacionesTable',
+  name: 'TiposRecomendacionesTable',
   components: {
-    NuevoEstadoRecomendacionModal
+    NuevoTipoRecomendacionesModal
   },
   mounted() {
     // Añadir listener para cerrar el dropdown cuando se hace clic fuera
     document.addEventListener('click', this.handleOutsideClick);
     
     // Emitir el total de tipos inicialmente al montar el componente
-    this.$emit('update-total', this.tiposCasos.length);
+    this.$emit('update-total', this.tiposRecomendaciones.length);
   },
   unmounted() {
     document.removeEventListener('click', this.handleOutsideClick);
@@ -113,18 +113,18 @@ export default {
       currentPage: 1,
       first: 0,
       itemsPerPage: 5, // Límite de 5 registros por página
-      showNuevoTipoCasoModal: false,
+      showNuevoTipoModal: false,
       dropdownOpen: false,
       modoEdicion: false,
       tipoSeleccionado: null,
       showConfirmationDialog: false,
       tipoAEliminar: null,
-      tiposCasos: [
-        { id: 1, descripcion: 'Robo' },
-        { id: 2, descripcion: 'Fraude' },
-        { id: 3, descripcion: 'Homicidio' },
-        { id: 4, descripcion: 'Estafa' },
-        { id: 5, descripcion: 'Secuestro' },
+      tiposRecomendaciones: [
+        { id: 1, descripcion: 'Mejora de seguridad' },
+        { id: 2, descripcion: 'Optimización de procesos' },
+        { id: 3, descripcion: 'Capacitación de personal' },
+        { id: 4, descripcion: 'Actualización tecnológica' },
+        { id: 5, descripcion: 'Reforma normativa' },
       ]
     };
   },
@@ -156,19 +156,19 @@ export default {
       return pages;
     },
     totalTipos() {
-      return this.tiposCasos.length;
+      return this.tiposRecomendaciones.length;
     },
     filteredTipos() {
       if (!this.searchQuery) {
         // Si no hay búsqueda, paginar todos los tipos
         const start = (this.currentPage - 1) * this.itemsPerPage;
         const end = start + this.itemsPerPage;
-        return this.tiposCasos.slice(start, end);
+        return this.tiposRecomendaciones.slice(start, end);
       }
       
       // Filtrar por consulta de búsqueda (ignorando mayúsculas/minúsculas)
       const query = this.searchQuery.toLowerCase();
-      const filtered = this.tiposCasos.filter(tipo => 
+      const filtered = this.tiposRecomendaciones.filter(tipo => 
         tipo.descripcion.toLowerCase().includes(query) || 
         tipo.id.toString().includes(query)
       );
@@ -180,11 +180,11 @@ export default {
     },
     totalItems() {
       if (!this.searchQuery) {
-        return this.tiposCasos.length;
+        return this.tiposRecomendaciones.length;
       }
       
       const query = this.searchQuery.toLowerCase();
-      return this.tiposCasos.filter(tipo => 
+      return this.tiposRecomendaciones.filter(tipo => 
         tipo.descripcion.toLowerCase().includes(query) || 
         tipo.id.toString().includes(query)
       ).length;
@@ -198,7 +198,7 @@ export default {
       this.currentPage = 1;
       this.first = 0;
     },
-    tiposCasos: {
+    tiposRecomendaciones: {
       handler(newValue) {
         // Emitir evento al componente padre con el total actualizado
         this.$emit('update-total', newValue.length);
@@ -230,16 +230,16 @@ export default {
       this.currentPage = 1;
     },
 
-    openNuevoTipoCasoModal() {
+    openNuevoTipoModal() {
       // Aseguramos que estamos en modo creación, no edición
       this.modoEdicion = false;
       this.tipoSeleccionado = null;
-      this.showNuevoTipoCasoModal = true;
+      this.showNuevoTipoModal = true;
     },
   
     // Alias para mantener compatibilidad con posibles llamadas existentes
-    abrirNuevoTipoCasoModal() {
-      this.openNuevoTipoCasoModal();
+    abrirNuevoTipoModal() {
+      this.openNuevoTipoModal();
     },
     
     toggleDropdown() {
@@ -259,44 +259,44 @@ export default {
       }
     },
     
-    agregarNuevoTipoCaso(nuevoTipo) {
+    agregarNuevoTipo(nuevoTipo) {
       // Validar que la descripción no esté vacía
       if (!nuevoTipo || !nuevoTipo.descripcion || nuevoTipo.descripcion.trim() === '') {
-        console.warn('Se intentó agregar un tipo de caso sin descripción');
+        console.warn('Se intentó agregar un tipo de recomendación sin descripción');
         return; // No agregar registros vacíos
       }
       
       // Asignar ID incremental
-      const nuevoId = this.tiposCasos.length > 0 ? Math.max(...this.tiposCasos.map(t => t.id)) + 1 : 1;
+      const nuevoId = this.tiposRecomendaciones.length > 0 ? Math.max(...this.tiposRecomendaciones.map(t => t.id)) + 1 : 1;
       
       // Crear objeto tipo
-      const tipoCaso = {
+      const tipoRecomendacion = {
         id: nuevoId,
         descripcion: nuevoTipo.descripcion.trim()
       };
       
       // Agregar a la lista
-      this.tiposCasos.push(tipoCaso);
-      this.showNuevoTipoCasoModal = false;
+      this.tiposRecomendaciones.push(tipoRecomendacion);
+      this.showNuevoTipoModal = false;
     },
     
-    editarTipoCaso(tipo) {
+    editarTipo(tipo) {
       // Establecer el modo edición y guardar el tipo seleccionado
       this.modoEdicion = true;
       this.tipoSeleccionado = {...tipo}; // Clonar el objeto para evitar referencias
       
       // Mostrar el modal
-      this.showNuevoTipoCasoModal = true;
+      this.showNuevoTipoModal = true;
     },
     
-    actualizarTipoCaso(tipoActualizado) {
+    actualizarTipo(tipoActualizado) {
       // Buscar el índice del tipo que estamos actualizando
-      const index = this.tiposCasos.findIndex(t => t.id === tipoActualizado.id);
+      const index = this.tiposRecomendaciones.findIndex(t => t.id === tipoActualizado.id);
       
       if (index !== -1) {
         // Actualizamos el tipo en el arreglo
-        this.tiposCasos[index] = {
-          ...this.tiposCasos[index],
+        this.tiposRecomendaciones[index] = {
+          ...this.tiposRecomendaciones[index],
           descripcion: tipoActualizado.descripcion
         };
       }
@@ -306,7 +306,7 @@ export default {
       this.tipoSeleccionado = null;
     },
     
-    eliminarTipoCaso(id) {
+    eliminarTipo(id) {
       // Mostrar diálogo de confirmación y guardar el ID del tipo a eliminar
       this.showConfirmationDialog = true;
       this.tipoAEliminar = id;
@@ -322,9 +322,9 @@ export default {
       // Si no hay un tipo seleccionado para eliminar, no hacer nada
       if (this.tipoAEliminar === null) return;
       
-      // Eliminar el tipo caso
-      console.log(`Eliminar tipo caso con ID: ${this.tipoAEliminar}`);
-      this.tiposCasos = this.tiposCasos.filter(tipo => tipo.id !== this.tipoAEliminar);
+      // Eliminar el tipo recomendación
+      console.log(`Eliminar tipo recomendación con ID: ${this.tipoAEliminar}`);
+      this.tiposRecomendaciones = this.tiposRecomendaciones.filter(tipo => tipo.id !== this.tipoAEliminar);
       
       // Cerrar el diálogo y limpiar
       this.showConfirmationDialog = false;

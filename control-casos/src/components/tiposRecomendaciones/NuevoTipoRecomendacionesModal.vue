@@ -2,7 +2,7 @@
   <div class="modal-background" v-if="show" @click.self="closeModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>{{ modoEdicion ? 'Editar Estado de Caso' : 'Nuevo Estado de Caso' }}</h2>
+        <h2>{{ modoEdicion ? 'Editar Tipo de Recomendación' : 'Nuevo Tipo de Recomendación' }}</h2>
         <button class="close-button" @click="closeModal">
           <span class="material-icons">close</span>
         </button>
@@ -36,21 +36,6 @@
               <label for="descripcion">Descripción</label>
             </div>
           </div>
-          
-          <div class="form-group">
-            <div class="float-label-group">
-              <input
-                type="number"
-                id="porciento"
-                v-model="formData.porciento"
-                required
-                placeholder=" "
-                min="0"
-                max="100"
-              />
-              <label for="porciento">Porciento (%)</label>
-            </div>
-          </div>
 
           <div class="form-actions">
             <button type="button" class="cancel-button" @click="closeModal">Cancelar</button>
@@ -64,17 +49,17 @@
     
 <script>
 export default {
-  name: 'NuevoEstadoCasoModal',
+  name: 'NuevoTipoRecomendacionesModal',
   props: {
     show: {
       type: Boolean,
       default: false
     },
-    estadosCasos: {
+    tiposRecomendaciones: {
       type: Array,
       default: () => []
     },
-    estadoSeleccionado: {
+    tipoSeleccionado: {
       type: Object,
       default: null
     },
@@ -87,8 +72,7 @@ export default {
     return {
       formData: {
         id: '',
-        descripcion: '',
-        porciento: 0
+        descripcion: ''
       }
     };
   },
@@ -98,12 +82,11 @@ export default {
   watch: {
     show(newVal) {
       if (newVal === true) {
-        if (this.modoEdicion && this.estadoSeleccionado) {
-          // Si estamos en modo edición, cargamos los datos del estado seleccionado
+        if (this.modoEdicion && this.tipoSeleccionado) {
+          // Si estamos en modo edición, cargamos los datos del tipo seleccionado
           this.formData = {
-            id: this.estadoSeleccionado.id,
-            descripcion: this.estadoSeleccionado.descripcion,
-            porciento: this.estadoSeleccionado.porciento || 0
+            id: this.tipoSeleccionado.id,
+            descripcion: this.tipoSeleccionado.descripcion
           };
         } else {
           // Si estamos creando uno nuevo, primero limpiamos completamente el formulario
@@ -128,18 +111,10 @@ export default {
         return;
       }
       
-      // Validar que el porciento esté entre 0 y 100
-      const porciento = parseInt(this.formData.porciento);
-      if (isNaN(porciento) || porciento < 0 || porciento > 100) {
-        alert('El porcentaje debe estar entre 0 y 100');
-        return;
-      }
-      
       // Guardamos los datos antes de resetear
-      const datosEstadoCaso = { 
+      const datosTipoRecomendacion = { 
         id: parseInt(this.formData.id),
-        descripcion: this.formData.descripcion.trim(),
-        porciento: porciento
+        descripcion: this.formData.descripcion.trim()
       };
       
       // Primero cerramos el modal (esto oculta el modal)
@@ -148,29 +123,28 @@ export default {
       // Luego emitimos el evento correspondiente según el modo
       setTimeout(() => {
         if (this.modoEdicion) {
-          this.$emit('update', datosEstadoCaso);
+          this.$emit('update', datosTipoRecomendacion);
         } else {
-          this.$emit('submit', datosEstadoCaso);
+          this.$emit('submit', datosTipoRecomendacion);
         }
       }, 50);
     },
     
     generarNuevoId() {
-      // Si no hay estados de casos, el nuevo ID será 1
-      if (!this.estadosCasos || this.estadosCasos.length === 0) {
+      // Si no hay tipos de recomendaciones, el nuevo ID será 1
+      if (!this.tiposRecomendaciones || this.tiposRecomendaciones.length === 0) {
         this.formData.id = 1;
         return;
       }
       
       // Encuentra el ID más alto y añade 1
-      const maxId = Math.max(...this.estadosCasos.map(estado => estado.id));
+      const maxId = Math.max(...this.tiposRecomendaciones.map(tipo => tipo.id));
       this.formData.id = maxId + 1;
     },
     resetForm() {
       this.formData = {
         id: '',
-        descripcion: '',
-        porciento: 0
+        descripcion: ''
       };
     }
   }
@@ -192,10 +166,10 @@ export default {
 }
 
 .modal-content {
-  width: 90%;
-  max-width: 500px;
   background-color: white;
   border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);

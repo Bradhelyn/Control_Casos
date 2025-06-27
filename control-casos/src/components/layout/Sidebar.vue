@@ -29,9 +29,9 @@
             <span class="material-icons">assignment_turned_in</span>
             <span class="menu-text">Estados de Recomendaciones</span>
           </li>
-          <li @click="navigateTo('saas')">
-            <span class="material-icons">bolt</span>
-            <span class="menu-text">SaaS Dashboard</span>
+          <li :class="{active: activeDashboard === 'tipos-recomendaciones'}" @click="navigateTo('tipos-recomendaciones')">
+            <span class="material-icons">description</span>
+            <span class="menu-text">Tipos de Recomendaciones</span>
           </li>
         </ul>
       </div>

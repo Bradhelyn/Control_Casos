@@ -5,7 +5,11 @@
       <Sidebar @dashboard-changed="changeDashboard" />
       <main class="main-content">
         <!-- Contenido principal de la aplicación -->
-        <component :is="currentDashboard" v-if="currentDashboard"></component>
+        <CasosDashboard v-if="currentDashboard === 'CasosDashboard'" />
+        <TiposCasosDashboard v-if="currentDashboard === 'TiposCasosDashboard'" />
+        <EstadosCasosDashboard v-if="currentDashboard === 'EstadosCasosDashboard'" />
+        <EstadoRecomendacionesDashboard v-if="currentDashboard === 'EstadoRecomendacionesDashboard'" />
+        <TiposRecomendacionesDashboard v-if="currentDashboard === 'TiposRecomendacionesDashboard'" />
       </main>
     </div>
   </div>
@@ -18,6 +22,7 @@ import CasosDashboard from './components/casos/CasosDashboard.vue';
 import TiposCasosDashboard from './components/tiposCasos/TiposCasosDashboard.vue';
 import EstadosCasosDashboard from './components/estadosCasos/EstadosCasosDashboard.vue';
 import EstadoRecomendacionesDashboard from './components/estadoRecomendaciones/EstadoRecomendacionesDashboard.vue';
+import TiposRecomendacionesDashboard from './components/tiposRecomendaciones/TiposRecomendacionesDashboard.vue';
 
 
 export default {
@@ -28,12 +33,39 @@ export default {
     CasosDashboard,
     TiposCasosDashboard,
     EstadosCasosDashboard,
-    EstadoRecomendacionesDashboard
+    EstadoRecomendacionesDashboard,
+    TiposRecomendacionesDashboard
   },
   data() {
     return {
-      currentDashboard: 'CasosDashboard'
+      currentDashboard: 'CasosDashboard',
+      tiposCasos: [],
+      estadosCasos: [],
+      estadosRecomendaciones: [],
+      tiposRecomendaciones: []
     };
+  },
+  created() {
+    // Cargar datos guardados en localStorage
+    const tiposCasosGuardados = localStorage.getItem('tiposCasos');
+    if (tiposCasosGuardados) {
+      this.tiposCasos = JSON.parse(tiposCasosGuardados);
+    }
+
+    const estadosCasosGuardados = localStorage.getItem('estadosCasos');
+    if (estadosCasosGuardados) {
+      this.estadosCasos = JSON.parse(estadosCasosGuardados);
+    }
+    
+    const estadosRecomendacionesGuardados = localStorage.getItem('estadosRecomendaciones');
+    if (estadosRecomendacionesGuardados) {
+      this.estadosRecomendaciones = JSON.parse(estadosRecomendacionesGuardados);
+    }
+    
+    const tiposRecomendacionesGuardados = localStorage.getItem('tiposRecomendaciones');
+    if (tiposRecomendacionesGuardados) {
+      this.tiposRecomendaciones = JSON.parse(tiposRecomendacionesGuardados);
+    }
   },
   methods: {
     changeDashboard(dashboard) {
@@ -44,6 +76,8 @@ export default {
         this.currentDashboard = 'EstadosCasosDashboard';
       } else if (dashboard === 'estados-recomendaciones') {
         this.currentDashboard = 'EstadoRecomendacionesDashboard';
+      } else if (dashboard === 'tipos-recomendaciones') {
+        this.currentDashboard = 'TiposRecomendacionesDashboard';
       } else {
         const componentName = dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + 'Dashboard';
         this.currentDashboard = componentName;
