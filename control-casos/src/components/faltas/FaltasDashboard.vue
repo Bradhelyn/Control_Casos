@@ -1,34 +1,34 @@
 <template>
-  <div class="estado-recomendaciones-dashboard">
+  <div class="tipos-casos-dashboard">
     <div class="nav-header">
       <div class="left-section">
         <img src="@/assets/Forense.png" alt="Logo Control de Casos" class="header-logo"/>
-        <span class="header-title">Control de Estados de Recomendaciones</span>
+        <span class="header-title">Control de Faltas</span>
       </div>
       <div class="right-section">
         <div class="info-card">
           <div class="info-card-content">
             <span class="info-number">{{ totalTipos }}</span>
-            <span class="info-label">Total de recomendaciones</span>
+            <span class="info-label">Total de Faltas</span>
           </div>
           <div class="info-icon total">
-            <span class="material-icons">assignment_turned_in</span>
+            <span class="material-icons">warning</span>
           </div>
         </div>
       </div>
     </div>
     
-    <EstadoRecomendacionesTable @update-total="actualizarTotal" />
+    <TiposCasosTable @update-total="actualizarTotal" />
   </div>
 </template>
 
 <script>
-import EstadoRecomendacionesTable from './EstadoRecomendacionesTable.vue';
+import TiposCasosTable from './FaltasTable.vue';
 
 export default {
-  name: 'EstadoRecomendacionesDashboard',
+  name: 'TiposCasosDashboard',
   components: {
-    EstadoRecomendacionesTable
+    TiposCasosTable
   },
   data() {
     return {
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style scoped>
-.estado-recomendaciones-dashboard {
+.tipos-casos-dashboard {
   display: flex;
   flex-direction: column;
   height: 100%;

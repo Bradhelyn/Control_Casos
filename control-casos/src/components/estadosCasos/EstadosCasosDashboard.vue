@@ -12,7 +12,7 @@
             <span class="info-label">Total de Estados</span>
           </div>
           <div class="info-icon total">
-            <span class="material-icons">assignment</span>
+            <span class="material-icons">insights</span>
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@
             <span class="info-label">Total de Tipos</span>
           </div>
           <div class="info-icon total">
-            <span class="material-icons">folder_special</span>
+            <span class="material-icons">description</span>
           </div>
         </div>
       </div>

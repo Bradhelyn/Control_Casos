@@ -37,6 +37,10 @@
             <span class="material-icons">input</span>
             <span class="menu-text">Medios de Recepción</span>
           </li>
+          <li :class="{active: activeDashboard === 'faltas'}" @click="navigateTo('faltas')">
+            <span class="material-icons">warning</span>
+            <span class="menu-text">Faltas</span>
+          </li>
         </ul>
       </div>
       

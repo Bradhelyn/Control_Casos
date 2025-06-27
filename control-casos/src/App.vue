@@ -11,6 +11,7 @@
         <EstadoRecomendacionesDashboard v-if="currentDashboard === 'EstadoRecomendacionesDashboard'" />
         <TiposRecomendacionesDashboard v-if="currentDashboard === 'TiposRecomendacionesDashboard'" />
         <MediosRecepcionDashboard v-if="currentDashboard === 'MediosRecepcionDashboard'" />
+        <FaltasDashboard v-if="currentDashboard === 'FaltasDashboard'" />
       </main>
     </div>
   </div>
@@ -25,6 +26,7 @@ import EstadosCasosDashboard from './components/estadosCasos/EstadosCasosDashboa
 import EstadoRecomendacionesDashboard from './components/estadoRecomendaciones/EstadoRecomendacionesDashboard.vue';
 import TiposRecomendacionesDashboard from './components/tiposRecomendaciones/TiposRecomendacionesDashboard.vue';
 import MediosRecepcionDashboard from './components/mediosRecepcion/MediosRecepcionDashboard.vue';
+import FaltasDashboard from './components/faltas/FaltasDashboard.vue';
 
 
 export default {
@@ -37,7 +39,8 @@ export default {
     EstadosCasosDashboard,
     EstadoRecomendacionesDashboard,
     TiposRecomendacionesDashboard,
-    MediosRecepcionDashboard
+    MediosRecepcionDashboard,
+    FaltasDashboard
   },
   data() {
     return {
@@ -89,6 +92,8 @@ export default {
         this.currentDashboard = 'TiposRecomendacionesDashboard';
       } else if (dashboard === 'medios-recepcion') {
         this.currentDashboard = 'MediosRecepcionDashboard';
+      } else if (dashboard === 'faltas') {
+        this.currentDashboard = 'FaltasDashboard';
       } else {
         const componentName = dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + 'Dashboard';
         this.currentDashboard = componentName;
