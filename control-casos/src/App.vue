@@ -10,6 +10,7 @@
         <EstadosCasosDashboard v-if="currentDashboard === 'EstadosCasosDashboard'" />
         <EstadoRecomendacionesDashboard v-if="currentDashboard === 'EstadoRecomendacionesDashboard'" />
         <TiposRecomendacionesDashboard v-if="currentDashboard === 'TiposRecomendacionesDashboard'" />
+        <MediosRecepcionDashboard v-if="currentDashboard === 'MediosRecepcionDashboard'" />
       </main>
     </div>
   </div>
@@ -23,6 +24,7 @@ import TiposCasosDashboard from './components/tiposCasos/TiposCasosDashboard.vue
 import EstadosCasosDashboard from './components/estadosCasos/EstadosCasosDashboard.vue';
 import EstadoRecomendacionesDashboard from './components/estadoRecomendaciones/EstadoRecomendacionesDashboard.vue';
 import TiposRecomendacionesDashboard from './components/tiposRecomendaciones/TiposRecomendacionesDashboard.vue';
+import MediosRecepcionDashboard from './components/mediosRecepcion/MediosRecepcionDashboard.vue';
 
 
 export default {
@@ -34,7 +36,8 @@ export default {
     TiposCasosDashboard,
     EstadosCasosDashboard,
     EstadoRecomendacionesDashboard,
-    TiposRecomendacionesDashboard
+    TiposRecomendacionesDashboard,
+    MediosRecepcionDashboard
   },
   data() {
     return {
@@ -42,7 +45,8 @@ export default {
       tiposCasos: [],
       estadosCasos: [],
       estadosRecomendaciones: [],
-      tiposRecomendaciones: []
+      tiposRecomendaciones: [],
+      mediosRecepcion: []
     };
   },
   created() {
@@ -66,6 +70,11 @@ export default {
     if (tiposRecomendacionesGuardados) {
       this.tiposRecomendaciones = JSON.parse(tiposRecomendacionesGuardados);
     }
+    
+    const mediosRecepcionGuardados = localStorage.getItem('mediosRecepcion');
+    if (mediosRecepcionGuardados) {
+      this.mediosRecepcion = JSON.parse(mediosRecepcionGuardados);
+    }
   },
   methods: {
     changeDashboard(dashboard) {
@@ -78,6 +87,8 @@ export default {
         this.currentDashboard = 'EstadoRecomendacionesDashboard';
       } else if (dashboard === 'tipos-recomendaciones') {
         this.currentDashboard = 'TiposRecomendacionesDashboard';
+      } else if (dashboard === 'medios-recepcion') {
+        this.currentDashboard = 'MediosRecepcionDashboard';
       } else {
         const componentName = dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + 'Dashboard';
         this.currentDashboard = componentName;

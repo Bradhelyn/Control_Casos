@@ -33,6 +33,10 @@
             <span class="material-icons">description</span>
             <span class="menu-text">Tipos de Recomendaciones</span>
           </li>
+          <li :class="{active: activeDashboard === 'medios-recepcion'}" @click="navigateTo('medios-recepcion')">
+            <span class="material-icons">input</span>
+            <span class="menu-text">Medios de Recepción</span>
+          </li>
         </ul>
       </div>
       
